@@ -44,23 +44,12 @@ router.post("/createpost", requiredLogin, (req, res) => {
         });
 });
 
-// router.get("/myposts", requiredLogin, (req, res) => {
-//     // FIND POSTS FROM THE USER THAT IS LOGGED IN
-//     Post.find({ postedBy: req.user_id })
-//         .populate("postedBy", "_id username")
-//         .then((myPost) => {
-//             res.json({ myPost });
-//         })
-//         .catch((err) => {
-//             console.log(err);
-//         });
-// });
-
 router.get("/myposts", requiredLogin, (req, res) => {
+    // FIND POSTS FROM THE USER THAT IS LOGGED IN
     Post.find({ postedBy: req.user._id })
-        .populate("PostedBy", "_id username")
-        .then((mypost) => {
-            res.json({ mypost });
+        .populate("postedBy", "_id username")
+        .then((myPost) => {
+            res.json({ myPost });
         })
         .catch((err) => {
             console.log(err);
