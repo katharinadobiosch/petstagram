@@ -1,0 +1,53 @@
+.profile_header {
+    margin: 2vh 4vw;
+    /* background-color: yellow; */
+    width: 92vw;
+    /* height: 50vh; */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding-bottom: 1vh;
+}
+.border_header {
+    border-bottom: 1px solid grey;
+}
+
+.profile_image {
+    width: 120px;
+    height: 120px;
+    border-radius: 100px;
+}
+
+.info {
+    width: 100%;
+    height: 120px;
+    margin-left: 4vw;
+    /* background-color: tomato; */
+}
+
+.username {
+    font-size: 2rem;
+    padding-top: 1vh;
+    display: flex;
+}
+
+.user_info {
+    padding-top: 1vh;
+    display: flex;
+    justify-content: flex-start;
+    text-align: center;
+}
+
+.gallery {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    row-gap: 0.3vh;
+}
+
+.posting {
+    width: 33vw;
+    height: auto;
+}

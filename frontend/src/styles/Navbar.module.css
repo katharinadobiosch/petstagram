@@ -1,0 +1,33 @@
+/* .icons {
+    background-color: yellow;
+    width: 100vw;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+}
+*/
+
+/* .nav_wrapper {
+    max-width: 90vw;
+    margin: auto;
+    background-color: pink;
+} */
+
+.nav_container {
+    background-color: white;
+    margin-bottom: 5vh;
+}
+
+ul {
+    /* background-color: yellow; */
+    /* height: 20px;
+    width: 100%;*/
+    padding-right: 1vw;
+}
+
+.logo {
+    /* background-color: yellow; */
+    /* height: 20px;
+    width: 100%;*/
+    padding-right: 1vw;
+}
