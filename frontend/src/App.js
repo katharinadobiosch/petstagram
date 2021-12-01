@@ -1,8 +1,6 @@
-import React from "react";
+import React, { useEffect, createContext } from "react";
 
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
-// import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/views/Navbar";
 import "./App.css";
@@ -13,12 +11,34 @@ import Profile from "./components/views/Profile";
 import Signup from "./components/views/Signup";
 import NewPost from "./components/views/NewPost";
 
+const UserContext = createContext();
+
+const Routing = () => {
+    return (
+        <main>
+            <Routes>
+                <Route exact path="/home" element={<Home />} />
+
+                <Route exact path="/login" element={<Login />} />
+
+                <Route exact path="/signup" element={<Signup />} />
+
+                <Route exact path="/profile" element={<Profile />} />
+
+                <Route exact path="/newpost" element={<NewPost />} />
+
+                <Route path="*" element={<Home />} />
+            </Routes>
+        </main>
+    );
+};
+
 const App = () => {
     return (
         <div>
             <Router>
                 <Navbar />
-                <main>
+                {/* <main>
                     <Routes>
                         <Route exact path="/home" element={<Home />} />
 
@@ -32,7 +52,7 @@ const App = () => {
 
                         <Route path="*" element={<Home />} />
                     </Routes>
-                </main>
+                </main> */}
             </Router>
         </div>
     );

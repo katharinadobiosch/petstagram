@@ -41,11 +41,12 @@ const Login = () => {
                 if (data.error) {
                     M.toast({ html: data.error, classes: "pink accent-2" });
                 } else {
-                    // localStorage.setItem("jwt", data.token);
-                    // localStorage.setItem("user", JSON.stringify(data.user));
+                    localStorage.setItem("jwt", data.token);
+                    localStorage.setItem("user", JSON.stringify(data.user));
+                    // dispatch({ type: "USER", payload: data.user });
 
                     M.toast({
-                        html: "Signed in successfully",
+                        html: "Logged in successfully",
                         classes: "green lighten-2",
                     });
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import M from "materialize-css";
 // import { useHistory } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -12,40 +12,44 @@ const NewPost = () => {
     const [image, setImage] = useState("");
     const [url, setUrl] = useState("");
 
-    // useEffect(() => {
-    //     if (url) {
-    //         fetch("/newpost", {
-    //             method: "post",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 Authorization: "Bearer " + localStorage.getItem("jwt"),
-    //             },
-    //             body: JSON.stringify({
-    //                 title,
-    //                 body,
-    //                 imageUrl: url,
-    //             }),
-    //         })
-    //             .then((res) => res.json())
-    //             .then((data) => {
-    //                 if (data.error) {
-    //                     M.toast({
-    //                         html: data.error,
-    //                         classes: "#c62828 red darken-3",
-    //                     });
-    //                 } else {
-    //                     M.toast({
-    //                         html: "Created post Successfully",
-    //                         classes: "#43a047 green darken-1",
-    //                     });
-    //                     // history.push("/");
-    //                 }
-    //             })
-    //             .catch((err) => {
-    //                 console.log(err);
-    //             });
-    //     }
-    // }, [url]);
+
+    // UPLOADING TAKES LONGER THAN FIRING THE FUNCTION. TO PREVENT THAT THE FUNCTION IS FIRED BEFORE IMAGE IS UPLOADED, I USE USEEFFECT
+    useEffect(() => {
+        if (url) {
+            fetch("/newpost", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + localStorage.getItem("jwt"),
+                },
+                body: JSON.stringify({ title, body, image: url }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data);
+                    if (data.error) {
+                        M.toast({ html: data.error, classes: "pink accent-2" });
+                    } else {
+                        // localStorage.setItem("jwt", data.token);
+                        // localStorage.setItem("user", JSON.stringify(data.user));
+
+                        M.toast({
+                            html: "Uploaded post successfully",
+                            classes: "green lighten-2",
+                        });
+                        // history.push("/");
+                        navigate("/home");
+
+                        // IF THE USER IS LOGGED IN, NAVIGATE TO HOME
+                        // <Navigate to="/home" replace />;
+                    }
+                    // console.log(data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }, [url]);
 
     const sendNewPostDetails = () => {
         const data = new FormData();
@@ -65,39 +69,6 @@ const NewPost = () => {
                 // console.log(data);
 
                 setUrl(data.url);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-
-        fetch("http://localhost:5000/newpost", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                // Authorization: "Bearer " + localStorage.getItem("jwt"),
-            },
-            body: JSON.stringify({ title, body, imageUrl: url }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log(data);
-                if (data.error) {
-                    M.toast({ html: data.error, classes: "pink accent-2" });
-                } else {
-                    // localStorage.setItem("jwt", data.token);
-                    // localStorage.setItem("user", JSON.stringify(data.user));
-
-                    M.toast({
-                        html: "Uploaded post successfully",
-                        classes: "green lighten-2",
-                    });
-                    // history.push("/");
-                    navigate("/");
-
-                    // IF THE USER IS LOGGED IN, NAVIGATE TO HOME
-                    // <Navigate to="/home" replace />;
-                }
-                // console.log(data);
             })
             .catch((err) => {
                 console.log(err);
