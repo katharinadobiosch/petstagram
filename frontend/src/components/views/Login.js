@@ -6,15 +6,15 @@ import { useNavigate } from "react-router-dom";
 import M from "materialize-css";
 
 const Login = () => {
+    let navigate = useNavigate();
+
     const SendData = (event) => {
         // const history = useHistory();
-        let navigate = useNavigate();
+        // let navigate = useNavigate();
         event.preventDefault();
 
         const username = event.target.username.value;
         const password = event.target.password.value;
-
-        console.log(username, password);
 
         // let navigate = useNavigate();
 
@@ -27,7 +27,7 @@ const Login = () => {
 
         // IS SENDING THE REQUETS TO LOCALHOST 3000
         // TO SOLVE IT: ADD CODE SNIPPET TO BACKEND APP.JS FILE
-        fetch("http://localhost:5000/login", {
+        fetch("/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

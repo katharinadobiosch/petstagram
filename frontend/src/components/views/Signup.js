@@ -5,22 +5,10 @@ import { useNavigate } from "react-router";
 import M from "materialize-css";
 
 const Signup = () => {
-    const navigate = useNavigate();
-    const handleClick = () => {};
-
-    // const [username, setUsername] = useState("");
-    // const [email, setEmail] = useState("");
-    // const [password, setPassword] = useState("");
-
-    // const changeUpdateData = (event) => {
-    //     setUsername(event.target.value);
-    //     setEmail(event.target.value);
-    //     setPassword(event.target.value);
-    // };
+    let navigate = useNavigate();
 
     const SendData = (event) => {
-        navigate("/home");
-
+        // const history = useHistory();
         event.preventDefault();
 
         const username = event.target.username.value;
@@ -67,7 +55,7 @@ const Signup = () => {
                     });
                     // IF THE USER IS SIGNED UP, NAVIGATE TO LOGIN
 
-                    // navigate("/login");
+                    navigate("/login");
                 }
                 // console.log(data);
             });
