@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 // import { useHistory } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../App";
 
 import M from "materialize-css";
 
 const Login = () => {
+    const { state, dispatch } = useContext(UserContext);
     let navigate = useNavigate();
 
     const SendData = (event) => {
@@ -43,7 +45,7 @@ const Login = () => {
                 } else {
                     localStorage.setItem("jwt", data.token);
                     localStorage.setItem("user", JSON.stringify(data.user));
-                    // dispatch({ type: "USER", payload: data.user });
+                    dispatch({ type: "USER", payload: data.user });
 
                     M.toast({
                         html: "Logged in successfully",
@@ -51,7 +53,7 @@ const Login = () => {
                     });
 
                     // IF THE USER IS LOGGED IN, NAVIGATE TO HOME
-                    navigate("/home");
+                    navigate("/");
                 }
                 // console.log(data);
             })

@@ -12,7 +12,6 @@ const NewPost = () => {
     const [image, setImage] = useState("");
     const [url, setUrl] = useState("");
 
-
     // UPLOADING TAKES LONGER THAN FIRING THE FUNCTION. TO PREVENT THAT THE FUNCTION IS FIRED BEFORE IMAGE IS UPLOADED, I USE USEEFFECT
     useEffect(() => {
         if (url) {
@@ -38,10 +37,10 @@ const NewPost = () => {
                             classes: "green lighten-2",
                         });
                         // history.push("/");
-                        navigate("/home");
+                        navigate("/");
 
                         // IF THE USER IS LOGGED IN, NAVIGATE TO HOME
-                        // <Navigate to="/home" replace />;
+                        // <Navigate to="/" replace />;
                     }
                     // console.log(data);
                 })
