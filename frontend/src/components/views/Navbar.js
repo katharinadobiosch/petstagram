@@ -8,7 +8,7 @@ const Navbar = () => {
         <div>
             <nav className={styles.nav_container}>
                 <div className={styles.nav_items}>
-                    <Link to="/" className="brand-logo left">
+                    <Link to="/home" className="brand-logo left">
                         <div className={styles.logo}>Petstagram</div>
                     </Link>
                     <div className={styles.icons}>
