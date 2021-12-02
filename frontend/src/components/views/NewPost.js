@@ -92,7 +92,7 @@ const NewPost = () => {
             />
             <input
                 type="text"
-                placeholder="body"
+                placeholder="Write a caption..."
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
             />
