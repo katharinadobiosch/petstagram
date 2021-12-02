@@ -16,33 +16,42 @@ const Navbar = () => {
     //     M.Modal.init(searchModal.current);
     // }, []);
 
+    const logout = (event) => {
+        event.preventDefault();
+
+        localStorage.clear();
+        dispatch({ type: "CLEAR" });
+        // navigate("/");
+        window.location.replace("/");
+    };
+
     const renderedList = () => {
         if (state) {
             return [
-                <li key="1">
-                    <Link to="/profile">
-                        <i className="material-icons">account_circle</i>
-                    </Link>
-                </li>,
-                <li key="2">
-                    <Link to="/newpost">
-                        <i className="material-icons">add_a_photo</i>
-                    </Link>
-                </li>,
-                <li>
-                    <button
-                        onClick={() => {
-                            localStorage.clear();
-                            dispatch({ type: "CLEAR" });
-                            navigate("/");
-                        }}
-                        // type="submit"
-                        className="btn red darken-3
+                <form onSubmit={logout}>
+                    <li key="1">
+                        <Link to="/profile">
+                            <i className="material-icons">account_circle</i>
+                        </Link>
+                    </li>
+                    ,
+                    <li key="2">
+                        <Link to="/newpost">
+                            <i className="material-icons">add_a_photo</i>
+                        </Link>
+                    </li>
+                    ,
+                    <li>
+                        <button
+                            type="submit"
+                            className="btn red darken-3
 "
-                    >
-                        Log out
-                    </button>
-                </li>,
+                        >
+                            Log out
+                        </button>
+                    </li>
+                    ,
+                </form>,
             ];
         } else {
             return [
