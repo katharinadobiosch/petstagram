@@ -4,11 +4,13 @@ const mongoose = require("mongoose");
 const requiredLogin = require("../middleware/requiredLogin");
 const Post = mongoose.model("Post");
 
-router.get("/allposts", (req, res) => {
+router.get("/allposts", requiredLogin, (req, res) => {
     // NO CONDITIONS, BECAUSE WE WANT TO FIND ALL POSTS
     Post.find()
         // POPULATE TO MAKE USERNAME VISIBLE
         .populate("postedBy", "_id username")
+        // LATEST POST ON TOP
+        .sort("-createdAt")
         .then((posts) => {
             res.json({ posts });
         })
@@ -17,11 +19,12 @@ router.get("/allposts", (req, res) => {
         });
 });
 
-router.post("/createpost", requiredLogin, (req, res) => {
-    const { title, body } = req.body;
+router.post("/newpost", requiredLogin, (req, res) => {
+    const { title, body, image } = req.body;
+    console.log(title, body, image);
 
     // IF TITLE AND BODY ARE EMPTY, SEND ERROR
-    if (!title || !body) {
+    if (!title || !body || !image) {
         res.status(422).json({ error: "Please fill out all fields" });
     }
 
@@ -33,6 +36,7 @@ router.post("/createpost", requiredLogin, (req, res) => {
     const post = new Post({
         title,
         body,
+        image,
         postedBy: req.user,
     });
     post.save()

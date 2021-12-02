@@ -26,7 +26,7 @@ router.post("/signup", (req, res) => {
             .hash(password, 12)
             .then((hashedPassword) => {
                 const user = new User({
-                    username: username,
+                    username,
                     email,
                     password: hashedPassword,
                 });
@@ -48,16 +48,18 @@ router.post("/signup", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-    // CHECK IF EMAIL AND PASSWORD ARE FILLED OUT
-    const { email, password } = req.body;
-    if (!email || !password) {
-        res.status(422).json({ error: "please add email or password" });
+    // CHECK IF USERNAME AND PASSWORD ARE FILLED OUT
+    const { username, password } = req.body;
+    if (!username || !password) {
+        res.status(422).json({ error: "please add username or password" });
     }
 
-    // CHECK IF EMAIL AND PASSWORD MATCH TOGETHER
-    User.findOne({ email: email }).then((savedUser) => {
+    // CHECK IF USERNAME AND PASSWORD MATCH TOGETHER
+    User.findOne({ username: username }).then((savedUser) => {
         if (!savedUser) {
-            return res.status(422).json({ error: "Invalid email or password" });
+            return res
+                .status(422)
+                .json({ error: "Invalid username or password" });
         }
         bcrypt
             .compare(password, savedUser.password)
@@ -65,7 +67,8 @@ router.post("/login", (req, res) => {
                 if (doMatch) {
                     // res.json({ message: "Successfully signed in!" });
                     const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
-                    res.json({ token: token });
+                    const { _id, username, email } = savedUser;
+                    res.json({ token, user: { _id, username, email } });
                 } else {
                     return res.status(422).json({ error: "Invalid password" });
                 }
