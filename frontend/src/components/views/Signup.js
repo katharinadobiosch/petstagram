@@ -67,7 +67,7 @@ const Signup = () => {
                 <h2>Petstagram</h2>
                 <input type="text" placeholder="username" name="username" />
                 <input type="text" placeholder="email" name="email" />
-                <input type="text" placeholder="password" name="password" />
+                <input type="password" placeholder="password" name="password" />
 
                 <button
                     type="submit"

@@ -67,7 +67,7 @@ const Login = () => {
             <div className="card auth-card input-field">
                 <h2>Petstagram</h2>
                 <input type="text" placeholder="username" name="username" />
-                <input type="text" placeholder="password" name="password" />
+                <input type="password" placeholder="password" name="password" />
                 <button
                     type="submit"
                     className="btn waves-effect waves-light #64b5f6 blue darken-1

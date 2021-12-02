@@ -28,7 +28,7 @@ const Routing = () => {
         // IF USER IS LOGGED IN THE URL ROUTES WORKS
         if (user) {
             dispatch({ type: "USER", payload: user });
-            navigate("/");
+            // navigate("/");
             // IF USER IS NOT LOGGED IN, USER WILL GO TO /LOGIN
         } else {
             // if (!navigate.location.pathname.startsWith("/reset"))

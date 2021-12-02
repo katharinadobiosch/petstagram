@@ -8,6 +8,7 @@ const Navbar = () => {
     const searchModal = useRef(null);
     const [search, setSearch] = useState("");
     const [userDetails, setUserDetails] = useState([]);
+
     const { state, dispatch } = useContext(UserContext);
     let navigate = useNavigate();
 
@@ -27,6 +28,20 @@ const Navbar = () => {
                     <Link to="/newpost">
                         <i className="material-icons">add_a_photo</i>
                     </Link>
+                </li>,
+                <li>
+                    <button
+                        onClick={() => {
+                            localStorage.clear();
+                            dispatch({ type: "CLEAR" });
+                            navigate("/");
+                        }}
+                        // type="submit"
+                        className="btn red darken-3
+"
+                    >
+                        Log out
+                    </button>
                 </li>,
             ];
         } else {
