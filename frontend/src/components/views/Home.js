@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../App";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styles from "../../../src/styles/Home.module.css";
 
 const Home = () => {
@@ -21,7 +21,7 @@ const Home = () => {
 
     const likePost = (id) => {
         fetch("/like", {
-            method: "put",
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: "Bearer " + localStorage.getItem("jwt"),
@@ -48,7 +48,7 @@ const Home = () => {
     };
     const unlikePost = (id) => {
         fetch("/unlike", {
-            method: "put",
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: "Bearer " + localStorage.getItem("jwt"),
@@ -74,6 +74,106 @@ const Home = () => {
             });
     };
 
+    const newComment = (comment, postId) => {
+        // event.preventDefault();
+        // event.target[0].value, item._id;
+
+        fetch("/comment", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("jwt"),
+            },
+            body: JSON.stringify({
+                postId,
+                text: comment,
+            }),
+        })
+            .then((res) => res.json())
+            .then((result) => {
+                console.log(result);
+                const newData = data.map((item) => {
+                    if (item._id === result._id) {
+                        return result;
+                    } else {
+                        return item;
+                    }
+                });
+                setData(newData);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    const deleteMyPost = (postId) => {
+        //("/deletemypost/:postId", requiredLogin, (req, res) => {
+
+        fetch(`/deletemypost/${postId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("jwt"),
+            },
+        })
+            .then((res) => res.json())
+            .then((result) => {
+                console.log(result);
+                const newData = data.filter((item) => {
+                    return item._id !== result._id;
+                });
+                setData(newData);
+            });
+    };
+
+    // const deleteMyComment = (commentId) => {
+    //     // ("/deletemycomment/:postId", requiredLogin, (req, res) => {
+
+    //     fetch(`/deletemycomment/${commentId}`, {
+    //         method: "DELETE",
+    //         headers: {
+    //             Authorization: localStorage.getItem("token"),
+    //         },
+    //     })
+    //         .then((res) => res.json())
+    //         .then((result) => {
+    //             const newData = data.map((item) => {
+    //                 if (item._id === result._id) {
+    //                     return result;
+    //                 } else {
+    //                     return item;
+    //                 }
+    //             });
+    //             setData(newData);
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    // };
+
+    const deleteMyComment = (commentId) => {
+        console.log("button was clicked");
+        fetch(`/deletemycomment/${commentId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: localStorage.getItem("jwt"),
+            },
+        })
+            .then((res) => res.json())
+            .then((result) => {
+                let newData = data.map((item) => {
+                    if (item._id === result._id) {
+                        return result;
+                    } else {
+                        return item;
+                    }
+                });
+                setData(newData);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
     return (
         <div className={styles.card_container}>
             <div className={styles.home}>
@@ -82,8 +182,33 @@ const Home = () => {
                         <div className="card home-card" key={item._id}>
                             <div className="card-image">
                                 <div className={styles.username}>
-                                    {item.postedBy.username}
+                                    {/* MY CODE */}
+                                    <Link
+                                        to={
+                                            item.postedBy._id !== state._id
+                                                ? "/profile/" +
+                                                  item.postedBy._id
+                                                : "/profile/"
+                                        }
+                                    >
+                                        {item.postedBy.username}
+                                    </Link>
+
+                                    {item.postedBy._id === state._id && (
+                                        <i
+                                            className="material-icons"
+                                            style={{
+                                                float: "right",
+                                            }}
+                                            onClick={() =>
+                                                deleteMyPost(item._id)
+                                            }
+                                        >
+                                            delete
+                                        </i>
+                                    )}
                                 </div>
+
                                 <img
                                     className={styles.posting}
                                     alt="That's my profile"
@@ -95,6 +220,7 @@ const Home = () => {
                                 {item.likes.includes(state._id) ? (
                                     <i
                                         className="material-icons"
+                                        style={{ color: "red" }}
                                         onClick={() => {
                                             unlikePost(item._id);
                                         }}
@@ -112,32 +238,56 @@ const Home = () => {
                                     </i>
                                 )}
 
-                                {/* UNLIKE */}
-                                {/* <i
-                                    className="material-icons"
-                                    onClick={() => {
-                                        unlikePost(item._id);
-                                    }}
-                                >
-                                    favorite_border
-                                </i> */}
-                                {/* LIKE */}
-                                {/* <i
-                                    className="material-icons"
-                                    onClick={() => {
-                                        likePost(item._id);
-                                    }}
-                                    style={{ color: "red" }}
-                                >
-                                    favorite
-                                </i> */}
-
                                 <h6>{item.likes.length} likes</h6>
                                 <p>{item.body}</p>
-                                <input
-                                    type="text"
-                                    placeholder="add a comment"
-                                />
+                                {item.comments.map((user) => {
+                                    return (
+                                        <h6 key={user._id}>
+                                            <span style={{ fontWeight: "500" }}>
+                                                {user.postedBy.username}
+                                            </span>
+                                            {` ${user.text}`}
+
+                                            {/* {comment.commentedBy._id === state._id && <i
+     style={‌{ cursor: "pointer" }}
+     onClick={() => deleteMyComment(item._id, comment._id)}
+     className="material-icons right">delete</i>} */}
+
+                                            {/* DELETE COMMENT */}
+                                            {user.postedBy._id ===
+                                                state._id && (
+                                                <i
+                                                    className="material-icons"
+                                                    style={{
+                                                        float: "right",
+                                                    }}
+                                                    onClick={() =>
+                                                        deleteMyComment(
+                                                            user._id
+                                                        )
+                                                    }
+                                                >
+                                                    delete
+                                                </i>
+                                            )}
+                                        </h6>
+                                    );
+                                })}
+                                {/* <form onSubmit={newComment}> */}
+                                <form
+                                    onSubmit={(event) => {
+                                        event.preventDefault();
+                                        newComment(
+                                            event.target[0].value,
+                                            item._id
+                                        );
+                                    }}
+                                >
+                                    <input
+                                        type="text"
+                                        placeholder="add a comment"
+                                    />
+                                </form>
                             </div>
                         </div>
                     );
@@ -148,122 +298,3 @@ const Home = () => {
 };
 
 export default Home;
-
-// import React from "react";
-// import styles from "../../../src/styles/Home.module.css";
-
-// const Home = () => {
-//     return (
-//         <>
-//             <div className={styles.card_container}>
-//                 <div className={styles.home}>
-//                     <div className="card home-card">
-//                         <div className="card-image">
-//                             <div className={styles.username}>Wolfgang</div>
-//                             <img
-//                                 className={styles.posting}
-//                                 alt="That's my profile"
-//                                 src="https://images.unsplash.com/photo-1617115184889-54c8935c11a3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Y2F0JTIwYmlydGhkYXl8ZW58MHwyfDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
-//                             />
-//                         </div>
-
-//                         <div className="card-content">
-//                             <i className="material-icons">favorite_border</i>
-
-//                             <h6>Title</h6>
-//                             <p>
-//                                 Last week we celebrated the first birthday of my
-//                                 Bestie!
-//                             </p>
-//                             <input type="text" placeholder="add a comment" />
-//                         </div>
-//                     </div>
-//                 </div>
-//                 <div className={styles.home}>
-//                     <div className="card home-card">
-//                         <div className="card-image">
-//                             <div className={styles.username}>Wolfgang</div>
-//                             <img
-//                                 className={styles.posting}
-//                                 alt="That's my profile"
-//                                 src="https://images.unsplash.com/photo-1525268771113-32d9e9021a97?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"
-//                             />
-//                         </div>
-
-//                         <div className="card-content">
-//                             <i className="material-icons">favorite_border</i>
-
-//                             <h6>Title</h6>
-//                             <p>My birthday party</p>
-//                             <input type="text" placeholder="add a comment" />
-//                         </div>
-//                     </div>
-//                 </div>
-//                 <div className={styles.home}>
-//                     <div className="card home-card">
-//                         <div className="card-image">
-//                             <div className={styles.username}>Wolfgang</div>
-//                             <img
-//                                 className={styles.posting}
-//                                 alt="That's my profile"
-//                                 src="https://images.unsplash.com/photo-1525268771113-32d9e9021a97?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"
-//                             />
-//                         </div>
-
-//                         <div className="card-content">
-//                             <i className="material-icons">favorite_border</i>
-
-//                             <h6>Title</h6>
-//                             <p>My birthday party</p>
-//                             <input type="text" placeholder="add a comment" />
-//                         </div>
-//                     </div>
-//                 </div>{" "}
-//                 <div className={styles.home}>
-//                     <div className="card home-card">
-//                         <div className="card-image">
-//                             <div className={styles.username}>Wolfgang</div>
-//                             <img
-//                                 className={styles.posting}
-//                                 alt="That's my profile"
-//                                 src="https://images.unsplash.com/photo-1525268771113-32d9e9021a97?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"
-//                             />
-//                         </div>
-
-//                         <div className="card-content">
-//                             <i className="material-icons">favorite_border</i>
-
-//                             <h6>Title</h6>
-//                             <p>My birthday party</p>
-//                             <input type="text" placeholder="add a comment" />
-//                         </div>
-//                     </div>
-//                 </div>{" "}
-//                 <div className={styles.home}>
-//                     <div className="card home-card">
-//                         <div className="card-image">
-//                             <div className={styles.username}>Wolfgang</div>
-//                             <img
-//                                 className={styles.posting}
-//                                 alt="That's my profile"
-//                                 src="https://images.unsplash.com/photo-1525268771113-32d9e9021a97?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"
-//                             />
-//                         </div>
-
-//                         <div className="card-content">
-//                             <i className="material-icons">favorite_border</i>
-
-//                             <h6>Title</h6>
-//                             <p>My birthday party</p>
-//                             <input type="text" placeholder="add a comment" />
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </>
-//     );
-// };
-
-// export default Home;
-
-///////////////////////////

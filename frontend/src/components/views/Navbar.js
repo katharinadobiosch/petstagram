@@ -1,16 +1,16 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import { UserContext } from "../../App";
-import M from "materialize-css";
+// import M from "materialize-css";
 import styles from "../../styles/Navbar.module.css";
 
 const Navbar = () => {
-    const searchModal = useRef(null);
-    const [search, setSearch] = useState("");
-    const [userDetails, setUserDetails] = useState([]);
+    // const searchModal = useRef(null);
+    // const [search, setSearch] = useState("");
+    // const [userDetails, setUserDetails] = useState([]);
 
     const { state, dispatch } = useContext(UserContext);
-    let navigate = useNavigate();
+    // let navigate = useNavigate();
 
     // useEffect(() => {
     //     M.Modal.init(searchModal.current);

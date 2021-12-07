@@ -9,6 +9,7 @@ router.get("/allposts", requiredLogin, (req, res) => {
     Post.find()
         // POPULATE TO MAKE USERNAME VISIBLE
         .populate("postedBy", "_id username")
+        .populate("comments.postedBy", "_id username")
         // LATEST POST ON TOP
         .sort("-createdAt")
         .then((posts) => {
@@ -20,11 +21,14 @@ router.get("/allposts", requiredLogin, (req, res) => {
 });
 
 router.post("/newpost", requiredLogin, (req, res) => {
-    const { title, body, image } = req.body;
-    console.log(title, body, image);
+    // const { title, body, image } = req.body;
+
+    const { body, image } = req.body;
+    console.log(body, image);
 
     // IF TITLE AND BODY ARE EMPTY, SEND ERROR
-    if (!title || !body || !image) {
+    // if (!title || !body || !image) {
+    if (!body || !image) {
         res.status(422).json({ error: "Please fill out all fields" });
     }
 
@@ -34,7 +38,7 @@ router.post("/newpost", requiredLogin, (req, res) => {
     // console.log(req.user);
     // res.send("ok");
     const post = new Post({
-        title,
+        // title,
         body,
         image,
         postedBy: req.user,
@@ -78,6 +82,7 @@ router.put("/like", requiredLogin, (req, res) => {
         }
     });
 });
+
 router.put("/unlike", requiredLogin, (req, res) => {
     Post.findByIdAndUpdate(
         req.body.postId,
@@ -95,5 +100,96 @@ router.put("/unlike", requiredLogin, (req, res) => {
         }
     });
 });
+
+router.put("/comment", requiredLogin, (req, res) => {
+    const comments = {
+        text: req.body.text,
+        postedBy: req.user._id,
+    };
+    Post.findByIdAndUpdate(
+        req.body.postId,
+        {
+            $push: { comments: comments },
+        },
+        {
+            new: true,
+        }
+    )
+        // POPULATE TO MAKE USERNAME VISIBLE
+
+        .populate("comments.postedBy", "_id username")
+        .populate("postedBy", "_id username")
+        .exec((err, result) => {
+            if (err) {
+                return res.status(422).json({ error: err });
+            } else {
+                res.json(result);
+            }
+        });
+});
+
+router.delete("/deletemypost/:postId", requiredLogin, (req, res) => {
+    Post.findOne({ _id: req.params.postId })
+        .populate("postedBy", "_id username")
+        .exec((err, post) => {
+            if (err || !post) {
+                return res.status(422).json({ error: err });
+            }
+            if (post.postedBy._id.toString() === req.user._id.toString()) {
+                post.remove()
+                    .then((result) => {
+                        res.json(result);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
+        });
+});
+
+// DELETE MY COMMENT
+
+// MY CODE
+router.delete("/deletemycomment/:commentId", requiredLogin, (req, res) => {
+    Post.findOne({ _id: req.params.commentId })
+        .populate("commentedBy", "_id username")
+        .exec((err, comment) => {
+            if (err || !comment) {
+                return res.status(422).json({ error: err });
+            }
+            if (
+                comment.commentedBy._id.toString() === req.user._id.toString()
+            ) {
+                comment.remove().then((result) => {
+                    res.json({ message: "deleted successfully" }).catch(
+                        (err) => {
+                            console.log(err);
+                        }
+                    );
+                });
+            }
+        });
+});
+
+// router.delete("/deletemycomment/:commentId", auth, async (req, res) => {
+//     try {
+//         // console.log(req.params.postId);
+//         // console.log(req.params.commentId);
+//         let post = await Post.findOne({ _id: req.params.postId })
+//             .populate("comments.commentedBy", "_id username")
+//             .populate("postedBy", "_id username");
+//         if (!post) {
+//             return res.status(404).json({ error: "Post not found" });
+//         }
+//         post.comments = await post.comments.filter((comment) => {
+//             return comment._id != req.params.commentId;
+//         });
+
+//         const result = await post.save();
+//         return res.json(result);
+//     } catch (err) {
+//         console.error("Error", err);
+//     }
+// });
 
 module.exports = router;

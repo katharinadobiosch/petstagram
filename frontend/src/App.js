@@ -16,6 +16,7 @@ import Profile from "./components/views/Profile";
 import Signup from "./components/views/Signup";
 import NewPost from "./components/views/NewPost";
 import { reducer, initialState } from "./reducers/userReducer";
+import UserProfile from "./components/views/UserProfile";
 
 export const UserContext = createContext();
 
@@ -48,6 +49,8 @@ const Routing = () => {
                 <Route exact path="/profile" element={<Profile />} />
 
                 <Route exact path="/newpost" element={<NewPost />} />
+
+                <Route exact path="/profile/:userid" element={<UserProfile />} />
 
                 <Route path="*" element={<Home />} />
             </Routes>

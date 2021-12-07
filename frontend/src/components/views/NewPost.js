@@ -7,7 +7,7 @@ const NewPost = () => {
     // const history = useHistory();
     let navigate = useNavigate();
 
-    const [title, setTitle] = useState("");
+    // const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [image, setImage] = useState("");
     const [url, setUrl] = useState("");
@@ -21,7 +21,9 @@ const NewPost = () => {
                     "Content-Type": "application/json",
                     Authorization: "Bearer " + localStorage.getItem("jwt"),
                 },
-                body: JSON.stringify({ title, body, image: url }),
+                body: JSON.stringify({ body, image: url }),
+
+                // body: JSON.stringify({ title, body, image: url }),
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -84,12 +86,12 @@ const NewPost = () => {
                 textAlign: "center",
             }}
         >
-            <input
+            {/* <input
                 type="text"
                 placeholder="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-            />
+            /> */}
             <input
                 type="text"
                 placeholder="Write a caption..."
