@@ -40,6 +40,7 @@ const Home = () => {
                         return item;
                     }
                 });
+                console.log(result);
                 setData(newData);
             })
             .catch((err) => {
@@ -67,6 +68,7 @@ const Home = () => {
                         return item;
                     }
                 });
+                console.log(result);
                 setData(newData);
             })
             .catch((err) => {
