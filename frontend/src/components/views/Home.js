@@ -108,25 +108,6 @@ const Home = () => {
             });
     };
 
-    const deleteMyPost = (postId) => {
-        //("/deletemypost/:postId", requiredLogin, (req, res) => {
-
-        fetch(`/deletemypost/${postId}`, {
-            method: "DELETE",
-            headers: {
-                Authorization: "Bearer " + localStorage.getItem("jwt"),
-            },
-        })
-            .then((res) => res.json())
-            .then((result) => {
-                console.log(result);
-                const newData = data.filter((item) => {
-                    return item._id !== result._id;
-                });
-                setData(newData);
-            });
-    };
-
     // const deleteMyComment = (commentId) => {
     //     // ("/deletemycomment/:postId", requiredLogin, (req, res) => {
 
@@ -176,6 +157,25 @@ const Home = () => {
             });
     };
 
+    const deleteMyPost = (postId) => {
+        // ("/deletemypost/:postId", requiredLogin, (req, res) => {
+
+        fetch(`/deletemypost/${postId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("jwt"),
+            },
+        })
+            .then((res) => res.json())
+            .then((result) => {
+                console.log(result);
+                const newData = data.filter((item) => {
+                    return item._id !== result._id;
+                });
+                setData(newData);
+            });
+    };
+
     return (
         <div className={styles.card_container}>
             <div className={styles.home}>
@@ -196,6 +196,7 @@ const Home = () => {
                                         {item.postedBy.username}
                                     </Link>
 
+                                    {/* DELETE MY POST */}
                                     {item.postedBy._id === state._id && (
                                         <i
                                             className="material-icons"
