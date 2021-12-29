@@ -5,7 +5,6 @@ import { useParams } from "react-router";
 
 const UserProfile = () => {
     const [userProfile, setUserProfile] = useState(null);
-
     const { state, dispatch } = useContext(UserContext);
     const { userid } = useParams();
     console.log(userid);
